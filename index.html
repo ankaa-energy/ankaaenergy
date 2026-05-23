@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ankaa Energy — Supersonic UAV Propulsion</title>
+<meta name="description" content="Ankaa Energy is a propulsion research and development company pioneering supersonic UAV technology for the next generation of unmanned aerospace systems.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #030508;
+    --bg2: #080c12;
+    --bg3: #0d1520;
+    --accent: #e85d1a;
+    --accent2: #ff7a35;
+    --gold: #c9963a;
+    --text: #e8eaf0;
+    --muted: #6b7a91;
+    --border: rgba(232,93,26,0.2);
+    --border2: rgba(255,255,255,0.06);
+    --font-head: 'Rajdhani', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 3rem;
+    height: 64px;
+    background: rgba(3,5,8,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border2);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .logo-mark {
+    width: 32px;
+    height: 32px;
+  }
+
+  .logo-text {
+    font-family: var(--font-head);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    text-transform: uppercase;
+  }
+
+  .logo-text span { color: var(--accent); }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  nav a {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  nav a:hover { color: var(--text); }
+
+  .nav-cta {
+    color: var(--accent) !important;
+    border: 0.5px solid var(--border);
+    padding: 6px 16px;
+    border-radius: 2px;
+  }
+
+  .nav-cta:hover { background: rgba(232,93,26,0.08) !important; }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 3rem 80px;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(232,93,26,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,93,26,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 100%);
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: 20%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(232,93,26,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-glow2 {
+    position: absolute;
+    bottom: 10%;
+    left: -5%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(201,150,58,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: var(--font-head);
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    max-width: 800px;
+    margin-bottom: 2rem;
+  }
+
+  h1 .line2 {
+    display: block;
+    color: var(--accent);
+    font-size: clamp(3rem, 7vw, 6.5rem);
+  }
+
+  .hero-sub {
+    max-width: 520px;
+    color: var(--muted);
+    font-size: 17px;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+    font-weight: 300;
+  }
+
+  .hero-sub strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 14px 28px;
+    border-radius: 2px;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 0.5px solid rgba(255,255,255,0.2);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 14px 28px;
+    border-radius: 2px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .btn-secondary:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.03); }
+
+  /* Hero stats bar */
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-top: 5rem;
+    padding-top: 2.5rem;
+    border-top: 0.5px solid var(--border2);
+    flex-wrap: wrap;
+  }
+
+  .hero-stat-num {
+    font-family: var(--font-head);
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .hero-stat-num span { color: var(--accent); }
+
+  .hero-stat-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* ── TICKER ── */
+  .ticker-wrap {
+    overflow: hidden;
+    background: var(--bg3);
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    padding: 12px 0;
+  }
+
+  .ticker {
+    display: flex;
+    gap: 0;
+    animation: tick 30s linear infinite;
+    white-space: nowrap;
+  }
+
+  .ticker-item {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .ticker-item::after {
+    content: '◆';
+    color: var(--accent);
+    font-size: 8px;
+  }
+
+  @keyframes tick {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    position: relative;
+    z-index: 1;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 3rem;
+  }
+
+  .section-pad { padding: 120px 0; }
+
+  .section-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-eyebrow::before {
+    content: '//';
+    color: var(--muted);
+  }
+
+  h2 {
+    font-family: var(--font-head);
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+  }
+
+  h3 {
+    font-family: var(--font-head);
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+  }
+
+  /* ── MISSION ── */
+  #mission {
+    background: var(--bg2);
+    border-top: 0.5px solid var(--border2);
+    border-bottom: 0.5px solid var(--border2);
+  }
+
+  .mission-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .mission-body {
+    color: #a0aabf;
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.8;
+  }
+
+  .mission-body p + p { margin-top: 1rem; }
+
+  .mission-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .mission-card {
+    background: var(--bg3);
+    border: 0.5px solid var(--border2);
+    padding: 1.5rem 2rem;
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    transition: border-color 0.2s;
+  }
+
+  .mission-card:hover { border-color: var(--border); }
+
+  .mission-card-icon {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    min-width: 48px;
+    padding-top: 2px;
+  }
+
+  .mission-card-body h4 {
+    font-family: var(--font-head);
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+
+  .mission-card-body p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── FOCUS AREAS ── */
+  #focus { background: var(--bg); }
+
+  .focus-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border2);
+    border: 0.5px solid var(--border2);
+    margin-top: 4rem;
+  }
+
+  .focus-card {
+    background: var(--bg);
+    padding: 2.5rem 2rem;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .focus-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .focus-card:hover::before { transform: scaleX(1); }
+  .focus-card:hover { background: var(--bg3); }
+
+  .focus-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 1.5rem;
+  }
+
+  .focus-card h3 { font-size: 1.1rem; margin-bottom: 0.75rem; }
+
+  .focus-card p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .focus-emoji {
+    font-size: 1.8rem;
+    margin-bottom: 1.25rem;
+    display: block;
+  }
+
+  /* ── TECHNOLOGY ── */
+  #technology {
+    background: var(--bg2);
+    border-top: 0.5px solid var(--border2);
+    border-bottom: 0.5px solid var(--border2);
+  }
+
+  .tech-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 6rem;
+    align-items: start;
+    margin-top: 4rem;
+  }
+
+  .tech-specs {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 0.5px solid var(--border2);
+  }
+
+  .spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 0.5px solid var(--border2);
+    transition: background 0.15s;
+  }
+
+  .spec-row:last-child { border-bottom: none; }
+  .spec-row:hover { background: rgba(232,93,26,0.04); }
+
+  .spec-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .spec-value {
+    font-family: var(--font-head);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    text-align: right;
+  }
+
+  .spec-value .unit {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent);
+    margin-left: 4px;
+    letter-spacing: 0.1em;
+  }
+
+  .tech-pillars { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .tech-pillar {
+    padding: 1.75rem 2rem;
+    border: 0.5px solid var(--border2);
+    background: var(--bg3);
+    position: relative;
+    padding-left: 2.5rem;
+  }
+
+  .tech-pillar::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+  }
+
+  .tech-pillar h4 {
+    font-family: var(--font-head);
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+
+  .tech-pillar p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── CTA ── */
+  #cta {
+    background: var(--bg);
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .cta-inner {
+    padding: 120px 3rem;
+    position: relative;
+  }
+
+  .cta-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(232,93,26,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-inner h2 { margin-bottom: 1.5rem; }
+
+  .cta-inner p {
+    color: var(--muted);
+    font-size: 18px;
+    font-weight: 300;
+    max-width: 500px;
+    margin: 0 auto 3rem;
+    line-height: 1.7;
+  }
+
+  .cta-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg2);
+    border-top: 0.5px solid var(--border2);
+    padding: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  footer .logo-text { font-size: 15px; }
+
+  .footer-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .footer-links a {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--text); }
+
+  .footer-copy {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── ANIMATIONS ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 900px) {
+    nav { padding: 0 1.5rem; }
+    nav ul { display: none; }
+    #hero, .container { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .mission-grid, .tech-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .focus-grid { grid-template-columns: 1fr 1fr; }
+    .hero-stats { gap: 2rem; }
+    footer { padding: 2rem 1.5rem; flex-direction: column; text-align: center; }
+  }
+
+  @media (max-width: 600px) {
+    .focus-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 2.5rem; }
+    h1 .line2 { font-size: 2.5rem; }
+    .cta-inner { padding: 80px 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">
+    <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="16,2 30,28 16,22 2,28" fill="none" stroke="#e85d1a" stroke-width="1.5" stroke-linejoin="round"/>
+      <line x1="16" y1="2" x2="16" y2="22" stroke="#e85d1a" stroke-width="1" opacity="0.5"/>
+    </svg>
+    <span class="logo-text">ANKAA <span>ENERGY</span></span>
+  </a>
+  <ul>
+    <li><a href="#mission">Mission</a></li>
+    <li><a href="#focus">Research</a></li>
+    <li><a href="#technology">Technology</a></li>
+    <li><a href="#cta" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <div class="hero-eyebrow">Propulsion R&amp;D · Est. 2025</div>
+
+  <h1>
+    Beyond<br>
+    <span class="line2">The Sound</span><br>
+    Barrier
+  </h1>
+
+  <p class="hero-sub">
+    Ankaa Energy is a <strong>propulsion science and engineering company</strong> building the next generation of supersonic UAV systems — from fundamental thermodynamics to flight-ready hardware.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#technology" class="btn-primary">View Technology →</a>
+    <a href="#cta" class="btn-secondary">Partner With Us</a>
+  </div>
+
+  <div class="hero-stats">
+    <div>
+      <div class="hero-stat-num">Mach <span>3+</span></div>
+      <div class="hero-stat-label">Target Platform Speed</div>
+    </div>
+    <div>
+      <div class="hero-stat-num"><span>R&amp;D</span></div>
+      <div class="hero-stat-label">Active Phase</div>
+    </div>
+    <div>
+      <div class="hero-stat-num">UAV <span>∞</span></div>
+      <div class="hero-stat-label">Scalable Architecture</div>
+    </div>
+    <div>
+      <div class="hero-stat-num"><span>2025</span></div>
+      <div class="hero-stat-label">Founded</div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item">Supersonic Propulsion</span>
+    <span class="ticker-item">Scramjet Development</span>
+    <span class="ticker-item">Aerodynamic Modeling</span>
+    <span class="ticker-item">UAV Systems</span>
+    <span class="ticker-item">Thermal Management</span>
+    <span class="ticker-item">Flight Controls</span>
+    <span class="ticker-item">Computational Fluid Dynamics</span>
+    <span class="ticker-item">Propellant Research</span>
+    <span class="ticker-item">Seeking Partners &amp; Investors</span>
+    <!-- duplicate for seamless loop -->
+    <span class="ticker-item">Supersonic Propulsion</span>
+    <span class="ticker-item">Scramjet Development</span>
+    <span class="ticker-item">Aerodynamic Modeling</span>
+    <span class="ticker-item">UAV Systems</span>
+    <span class="ticker-item">Thermal Management</span>
+    <span class="ticker-item">Flight Controls</span>
+    <span class="ticker-item">Computational Fluid Dynamics</span>
+    <span class="ticker-item">Propellant Research</span>
+    <span class="ticker-item">Seeking Partners &amp; Investors</span>
+  </div>
+</div>
+
+<!-- MISSION -->
+<section id="mission">
+  <div class="container section-pad">
+    <div class="mission-grid">
+      <div>
+        <div class="section-eyebrow">Our Mission</div>
+        <h2>Pushing the<br>Limits of Speed</h2>
+        <div class="mission-body fade-in">
+          <p>The next generation of unmanned aerial systems demands propulsion technology that doesn't yet exist at scale. Ankaa Energy was founded to close that gap — through rigorous scientific research, novel engineering, and an obsession with performance.</p>
+          <p>We focus on the most challenging frontier in aerospace: reliable, repeatable supersonic and hypersonic propulsion for autonomous platforms. Our work spans fundamental physics to operational hardware.</p>
+        </div>
+      </div>
+      <div class="mission-visual fade-in">
+        <div class="mission-card">
+          <div class="mission-card-icon">01 //</div>
+          <div class="mission-card-body">
+            <h4>Science-First Culture</h4>
+            <p>Every design decision is grounded in first-principles thermodynamics and fluid dynamics.</p>
+          </div>
+        </div>
+        <div class="mission-card">
+          <div class="mission-card-icon">02 //</div>
+          <div class="mission-card-body">
+            <h4>Hardware-Obsessed</h4>
+            <p>We move rapidly from simulation to bench testing to prototype — no vaporware.</p>
+          </div>
+        </div>
+        <div class="mission-card">
+          <div class="mission-card-icon">03 //</div>
+          <div class="mission-card-body">
+            <h4>Mission-Ready</h4>
+            <p>Built for defense, intelligence, and dual-use aerospace applications from day one.</p>
+          </div>
+        </div>
+        <div class="mission-card">
+          <div class="mission-card-icon">04 //</div>
+          <div class="mission-card-body">
+            <h4>Open to Partners</h4>
+            <p>We actively seek research institutions, primes, and investors aligned with our roadmap.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH FOCUS -->
+<section id="focus">
+  <div class="container section-pad">
+    <div class="section-eyebrow">Research Focus</div>
+    <h2>Where We Operate</h2>
+    <div class="focus-grid fade-in">
+      <div class="focus-card">
+        <div class="focus-num">F-01</div>
+        <h3>Supersonic Propulsion</h3>
+        <p>Development of turbojet, ramjet, and scramjet propulsion cycles optimized for UAV form factors operating above Mach 1.</p>
+      </div>
+      <div class="focus-card">
+        <div class="focus-num">F-02</div>
+        <h3>Aerothermodynamics</h3>
+        <p>High-fidelity CFD and wind tunnel testing of airframe-propulsion integration at transonic and supersonic speeds.</p>
+      </div>
+      <div class="focus-card">
+        <div class="focus-num">F-03</div>
+        <h3>Propellant Chemistry</h3>
+        <p>Research into advanced fuel formulations and oxidizer combinations for high-energy-density propulsion applications.</p>
+      </div>
+      <div class="focus-card">
+        <div class="focus-num">F-04</div>
+        <h3>Thermal Management</h3>
+        <p>Novel heat mitigation systems and materials science enabling sustained supersonic operation without structural degradation.</p>
+      </div>
+      <div class="focus-card">
+        <div class="focus-num">F-05</div>
+        <h3>Autonomous Flight Systems</h3>
+        <p>Guidance, navigation, and control architectures for unmanned platforms operating in contested and high-speed regimes.</p>
+      </div>
+      <div class="focus-card">
+        <div class="focus-num">F-06</div>
+        <h3>Platform Integration</h3>
+        <p>End-to-end vehicle design — from propulsion core to aerodynamic shell — for modular, mission-configurable UAV systems.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECHNOLOGY -->
+<section id="technology">
+  <div class="container section-pad">
+    <div class="section-eyebrow">Platform Specs</div>
+    <h2>The Technology</h2>
+    <div class="tech-layout fade-in">
+      <div>
+        <p style="color: var(--muted); font-size: 15px; line-height: 1.8; margin-bottom: 2rem; font-weight: 300;">
+          Ankaa Energy's flagship UAV platform targets Mach 3+ operation with a modular propulsion core designed for iterative development and rapid reconfiguration.
+        </p>
+        <div class="tech-specs">
+          <div class="spec-row">
+            <span class="spec-label">Platform Class</span>
+            <span class="spec-value">Supersonic UAV</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Target Speed</span>
+            <span class="spec-value">Mach 3+<span class="unit">DESIGN</span></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Propulsion Type</span>
+            <span class="spec-value">Ramjet / Turbojet</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Altitude Regime</span>
+            <span class="spec-value">High-Altitude<span class="unit">HAE</span></span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Dev Phase</span>
+            <span class="spec-value">Active R&amp;D</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-label">Architecture</span>
+            <span class="spec-value">Modular / Scalable</span>
+          </div>
+        </div>
+      </div>
+      <div class="tech-pillars">
+        <div class="tech-pillar">
+          <h4>Propulsion Core</h4>
+          <p>A variable-geometry inlet and combustion architecture that efficiently transitions from subsonic taxi to sustained supersonic cruise without sacrificing reliability or restartability.</p>
+        </div>
+        <div class="tech-pillar">
+          <h4>Integrated Airframe</h4>
+          <p>Airframe and propulsion co-designed from the ground up — eliminating the performance penalties of adapting existing airframes for high-speed propulsion packages.</p>
+        </div>
+        <div class="tech-pillar">
+          <h4>Autonomous GNC</h4>
+          <p>Onboard guidance, navigation, and control systems capable of handling the rapid aerodynamic changes inherent to transonic and supersonic flight envelopes.</p>
+        </div>
+        <div class="tech-pillar">
+          <h4>Rapid Iteration Model</h4>
+          <p>Simulation-to-hardware pipelines that compress the development cycle — enabling frequent test campaigns and continuous refinement of propulsion performance.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-inner">
+    <div class="cta-glow"></div>
+    <div class="section-eyebrow" style="justify-content: center;">Get Involved</div>
+    <h2>Ready to Go<br>Supersonic?</h2>
+    <p>We're actively seeking research partners, aerospace primes, and mission-aligned investors. Let's talk about what Ankaa Energy can build together.</p>
+    <div class="cta-actions">
+      <a href="mailto:hello@ankaaenergy.com" class="btn-primary">Get in Touch →</a>
+      <a href="#mission" class="btn-secondary">Learn More</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="logo">
+    <svg class="logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="16,2 30,28 16,22 2,28" fill="none" stroke="#e85d1a" stroke-width="1.5" stroke-linejoin="round"/>
+      <line x1="16" y1="2" x2="16" y2="22" stroke="#e85d1a" stroke-width="1" opacity="0.5"/>
+    </svg>
+    <span class="logo-text">ANKAA <span>ENERGY</span></span>
+  </a>
+  <ul class="footer-links">
+    <li><a href="#mission">Mission</a></li>
+    <li><a href="#focus">Research</a></li>
+    <li><a href="#technology">Technology</a></li>
+    <li><a href="#cta">Contact</a></li>
+  </ul>
+  <span class="footer-copy">© 2025 Ankaa Energy. All rights reserved.</span>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
